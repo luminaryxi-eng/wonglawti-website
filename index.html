@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Kevin Goh | Wong, Law & Ti — Kuantan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --gold:#B8972E;--gold-mid:#C9A84C;--gold-light:#E8D5A0;--gold-pale:#FAF6EC;--gold-faint:#FDFAF3;
+  --dark:#16150F;--dark2:#242218;--mid:#4A4535;--soft:#8A8270;--line:#E4DAC4;--bg:#FDFAF4;
+  --sidebar-w:280px;--ease:cubic-bezier(.4,0,.2,1);
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;overflow-x:hidden;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--gold-light);border-radius:2px;}
+
+/* PAGE SYSTEM */
+.page{display:none;}
+.page.active{display:block;}
+
+/* HAMBURGER */
+.hamburger{display:none;position:fixed;top:18px;left:18px;z-index:300;background:var(--dark);border:none;border-radius:6px;padding:11px 13px;cursor:pointer;flex-direction:column;gap:5px;}
+.hamburger span{display:block;width:20px;height:1.5px;background:var(--gold);transition:all 0.3s var(--ease);}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(4.5px,4.5px);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(4.5px,-4.5px);}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:150;backdrop-filter:blur(2px);}
+.overlay.open{display:block;}
+
+/* LAYOUT */
+.site-layout{display:flex;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{
+  width:var(--sidebar-w);background:var(--dark2);
+  display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;height:100vh;
+  overflow-y:auto;z-index:200;
+  transition:transform 0.35s var(--ease);
+}
+.sidebar::before{content:'';display:block;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-mid),transparent);flex-shrink:0;}
+.sidebar-brand{padding:28px 28px 22px;}
+.brand-seal{width:44px;height:44px;border-radius:50%;border:1px solid rgba(184,151,46,0.4);display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+.brand-seal svg{width:20px;height:20px;stroke:var(--gold);fill:none;stroke-width:1.2;}
+.brand-firm{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;letter-spacing:0.06em;color:#fff;line-height:1.25;}
+.brand-firm span{color:var(--gold);}
+.brand-meta p{font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:0.1em;text-transform:uppercase;margin-top:5px;}
+.brand-divider{width:100%;height:0.5px;background:rgba(255,255,255,0.07);margin:18px 0 0;}
+.sidebar-nav{padding:16px 0 40px;flex:1;}
+.nav-section-label{font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.22);padding:0 28px;margin:18px 0 8px;}
+.nav-item{
+  display:flex;align-items:center;gap:13px;padding:11px 28px;cursor:pointer;
+  color:rgba(255,255,255,0.46);font-size:13px;font-weight:400;letter-spacing:0.03em;
+  border-left:2px solid transparent;transition:all 0.22s var(--ease);
+  background:none;border-top:none;border-right:none;border-bottom:none;
+  width:100%;text-align:left;font-family:'Outfit',sans-serif;
+}
+.nav-item:hover{color:rgba(255,255,255,0.82);background:rgba(255,255,255,0.03);}
+.nav-item.active{color:#fff;border-left-color:var(--gold);background:rgba(184,151,46,0.1);}
+.nav-icon{width:15px;height:15px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.5;}
+.sidebar-footer{padding:20px 28px;border-top:0.5px solid rgba(255,255,255,0.06);}
+.sidebar-footer p{font-size:10px;color:rgba(255,255,255,0.2);line-height:1.7;letter-spacing:0.04em;}
+
+/* MAIN AREA */
+.main-area{margin-left:var(--sidebar-w);flex:1;min-height:100vh;display:flex;flex-direction:column;}
+
+/* TOPBAR */
+.topbar{background:rgba(253,250,244,0.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:0.5px solid var(--line);padding:0 52px;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.topbar-left{display:flex;align-items:center;gap:14px;}
+.topbar-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);}
+.topbar-name{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;color:var(--gold);letter-spacing:0.04em;}
+.topbar-loc{font-size:11px;color:var(--soft);letter-spacing:0.1em;text-transform:uppercase;}
+
+/* HERO */
+.hero{position:relative;overflow:hidden;padding:72px 52px 64px;background:var(--bg);border-bottom:0.5px solid var(--line);}
+.hero-bg-text{position:absolute;right:-20px;top:50%;transform:translateY(-50%);font-family:'Cormorant Garamond',serif;font-size:240px;font-weight:300;font-style:italic;color:rgba(184,151,46,0.055);line-height:1;user-select:none;pointer-events:none;}
+.hero::before{content:'';position:absolute;left:52px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,var(--gold-light),transparent);pointer-events:none;}
+.hero-inner{padding-left:28px;}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;}
+.hero-tag::before{content:'';width:20px;height:0.5px;background:var(--gold);}
+.hero-name{font-family:'Cormorant Garamond',serif;font-size:clamp(44px,6vw,80px);font-weight:300;line-height:1.0;color:var(--gold);}
+.hero-name strong{font-weight:500;}
+.hero-firm{font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2vw,22px);font-weight:400;color:var(--mid);margin-top:10px;letter-spacing:0.05em;}
+.hero-rule{display:flex;align-items:center;gap:12px;margin:24px 0;}
+.hero-rule::before{content:'';width:48px;height:1px;background:var(--gold);}
+.hero-rule::after{content:'';flex:1;height:0.5px;background:var(--line);}
+.hero-desc{font-size:14px;color:var(--soft);line-height:1.85;max-width:480px;font-weight:300;}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px;}
+.chip{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border:0.5px solid var(--gold-light);color:var(--gold);border-radius:20px;padding:5px 14px;background:var(--gold-faint);}
+
+/* STATS */
+.stats-band{background:var(--dark);display:grid;grid-template-columns:repeat(4,1fr);}
+.stat-item{padding:26px 28px;border-right:0.5px solid rgba(255,255,255,0.06);position:relative;overflow:hidden;}
+.stat-item:last-child{border-right:none;}
+.stat-item::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent);opacity:0;transition:opacity 0.3s;}
+.stat-item:hover::before{opacity:1;}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:400;color:var(--gold);line-height:1;}
+.stat-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:5px;}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 400px;border-bottom:0.5px solid var(--line);}
+.col-left{padding:48px 44px;border-right:0.5px solid var(--line);}
+.col-right{display:flex;flex-direction:column;}
+
+/* PRACTICE CARDS */
+.section-eyebrow{font-size:9px;letter-spacing:0.24em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;color:var(--dark);line-height:1.2;margin-bottom:24px;}
+.cards-list{display:flex;flex-direction:column;gap:10px;}
+.pcard{background:#fff;border:0.5px solid var(--line);border-radius:8px;padding:18px 20px;cursor:pointer;transition:all 0.25s var(--ease);position:relative;overflow:hidden;}
+.pcard::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--gold-light);transition:background 0.25s;}
+.pcard:hover{border-color:var(--gold-light);box-shadow:0 2px 20px rgba(184,151,46,0.07);}
+.pcard:hover::before{background:var(--gold);}
+.pcard-head{display:flex;align-items:center;gap:12px;margin-bottom:6px;}
+.pcard-icon{width:30px;height:30px;background:var(--gold-pale);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pcard-icon svg{width:15px;height:15px;stroke:var(--gold);fill:none;stroke-width:1.5;}
+.pcard-title{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;color:var(--dark);}
+.pcard-desc{font-size:12px;color:var(--soft);line-height:1.65;font-weight:300;}
+.pcard-cta{display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);opacity:0;transition:opacity 0.2s;}
+.pcard:hover .pcard-cta{opacity:1;}
+
+/* MAP */
+.map-header{padding:24px 28px 18px;border-bottom:0.5px solid var(--line);}
+.map-header h3{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--dark);margin-top:4px;}
+.map-frame{flex:1;}
+.map-frame iframe{width:100%;height:100%;min-height:300px;border:none;display:block;}
+.map-address{padding:18px 28px;background:#fff;border-top:0.5px solid var(--line);}
+.map-address p{font-size:12px;color:var(--soft);line-height:1.8;font-weight:300;}
+.map-address strong{color:var(--dark);font-weight:500;display:block;margin-bottom:2px;}
+
+/* ABOUT */
+.about-strip{display:grid;grid-template-columns:1fr 1fr;border-bottom:0.5px solid var(--line);}
+.about-left{background:var(--dark);padding:44px;position:relative;overflow:hidden;}
+.about-left::before{content:'"';position:absolute;top:-20px;left:32px;font-family:'Cormorant Garamond',serif;font-size:180px;color:rgba(184,151,46,0.07);line-height:1;pointer-events:none;}
+.about-quote{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;font-weight:300;color:#fff;line-height:1.65;position:relative;z-index:1;}
+.about-quote em{color:var(--gold);font-style:normal;}
+.about-attr{margin-top:20px;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.28);}
+.about-right{background:#fff;padding:44px;}
+.about-items{display:flex;flex-direction:column;gap:16px;margin-top:10px;}
+.about-item{display:flex;gap:12px;align-items:flex-start;}
+.about-item-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);margin-top:7px;flex-shrink:0;}
+.about-item-text p:first-child{font-size:13px;font-weight:500;color:var(--dark);margin-bottom:2px;}
+.about-item-text p:last-child{font-size:12px;color:var(--soft);font-weight:300;line-height:1.6;}
+
+/* FOOTER */
+.site-footer{background:var(--dark);padding:44px 52px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+.footer-firm{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;color:#fff;}
+.footer-firm span{color:var(--gold);}
+.footer-address{margin-top:8px;font-size:12px;color:rgba(255,255,255,0.3);line-height:1.7;}
+.footer-bar{background:#111009;padding:14px 52px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+.footer-bar p{font-size:10px;color:rgba(255,255,255,0.2);letter-spacing:0.06em;}
+
+/* ═══ ARTICLE PAGES ═══ */
+.art-topbar{background:rgba(253,250,244,0.95);backdrop-filter:blur(12px);border-bottom:0.5px solid var(--line);padding:0 52px;height:62px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;}
+.back-btn{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--soft);letter-spacing:0.06em;cursor:pointer;background:none;border:none;font-family:'Outfit',sans-serif;transition:color 0.2s;padding:0;}
+.back-btn:hover{color:var(--gold);}
+.back-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.5;}
+.art-sep{width:0.5px;height:20px;background:var(--line);}
+.art-topbar-name{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--gold);letter-spacing:0.04em;}
+
+.art-hero{padding:52px 52px 44px;border-bottom:0.5px solid var(--line);background:var(--dark);position:relative;overflow:hidden;}
+.art-hero::before{content:'';position:absolute;right:-40px;top:-40px;width:280px;height:280px;border-radius:50%;border:0.5px solid rgba(184,151,46,0.1);}
+.art-hero::after{content:'';position:absolute;right:40px;top:40px;width:160px;height:160px;border-radius:50%;border:0.5px solid rgba(184,151,46,0.08);}
+.art-category{font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+.art-hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,50px);font-weight:300;color:#fff;line-height:1.15;max-width:640px;}
+.art-hero-sub{font-size:13px;color:rgba(255,255,255,0.38);margin-top:12px;}
+
+.art-body{display:grid;grid-template-columns:1fr 300px;}
+.art-main{padding:44px 48px;border-right:0.5px solid var(--line);}
+.art-cards{display:flex;flex-direction:column;gap:1px;background:var(--line);}
+.art-card{background:#fff;padding:26px 28px;cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;}
+.art-card:hover{background:var(--gold-faint);border-left-color:var(--gold);}
+.art-card-tag{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.art-card h3{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--dark);line-height:1.3;margin-bottom:7px;}
+.art-card p{font-size:12px;color:var(--soft);line-height:1.7;font-weight:300;}
+.art-card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:12px;}
+.art-card-date{font-size:10px;color:rgba(139,130,112,0.6);letter-spacing:0.08em;}
+.art-card-arr{font-size:14px;color:var(--gold-light);}
+.art-card:hover .art-card-arr{color:var(--gold);}
+
+.art-side{padding:28px 24px;position:sticky;top:62px;}
+.art-side-label{font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+.art-side-card{background:#fff;border:0.5px solid var(--line);border-radius:8px;padding:16px 18px;margin-bottom:12px;}
+.art-side-card h4{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:500;color:var(--dark);margin-bottom:5px;}
+.art-side-card p{font-size:11px;color:var(--soft);line-height:1.65;font-weight:300;}
+.art-side-div{height:0.5px;background:var(--line);margin:18px 0;}
+.art-side-contact{font-size:11px;color:var(--soft);line-height:1.75;}
+.art-side-contact strong{color:var(--dark);font-weight:500;display:block;margin-bottom:3px;}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.hero-tag{animation:fadeUp .6s var(--ease) .05s both;}
+.hero-name{animation:fadeUp .6s var(--ease) .12s both;}
+.hero-firm{animation:fadeUp .6s var(--ease) .18s both;}
+.hero-rule{animation:fadeUp .6s var(--ease) .24s both;}
+.hero-desc{animation:fadeUp .6s var(--ease) .3s both;}
+.hero-chips{animation:fadeUp .6s var(--ease) .36s both;}
+
+/* RESPONSIVE */
+@media(max-width:960px){
+  .two-col,.art-body,.about-strip{grid-template-columns:1fr;}
+  .col-right{border-top:0.5px solid var(--line);}
+  .map-frame iframe{min-height:260px;}
+  .art-side{display:none;}
+  .stats-band{grid-template-columns:repeat(2,1fr);}
+  .stat-item:nth-child(2){border-right:none;}
+  .stat-item:nth-child(3){border-right:0.5px solid rgba(255,255,255,0.06);border-top:0.5px solid rgba(255,255,255,0.06);}
+  .stat-item:nth-child(4){border-top:0.5px solid rgba(255,255,255,0.06);border-right:none;}
+}
+@media(max-width:768px){
+  .hamburger{display:flex;}
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .main-area{margin-left:0;}
+  .topbar,.art-topbar{padding:0 18px 0 60px;}
+  .topbar-loc{display:none;}
+  .hero{padding:44px 24px 40px;}.hero::before{left:24px;}.hero-inner{padding-left:18px;}
+  .hero-bg-text{font-size:140px;}
+  .col-left{padding:36px 24px;}
+  .map-header{padding:20px 24px 16px;}.map-address{padding:16px 24px;}
+  .about-left,.about-right{padding:36px 28px;}
+  .site-footer{padding:36px 24px;}.footer-bar{padding:14px 24px;}
+  .art-hero{padding:36px 24px 32px;}.art-main{padding:36px 24px;}
+  .art-topbar{padding:0 18px 0 60px;}
+}
+@media(max-width:480px){
+  .hero-bg-text{display:none;}
+  .stats-band{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<button class="hamburger" id="hbg" aria-label="Open menu"><span></span><span></span><span></span></button>
+<div class="overlay" id="overlay"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-seal"><svg viewBox="0 0 24 24"><path d="M12 3l1.5 4.5H18l-3.75 2.72 1.43 4.38L12 11.9l-3.68 2.7 1.43-4.38L6 7.5h4.5L12 3z"/></svg></div>
+    <div class="brand-firm">Wong, <span>Law</span> &amp; Ti</div>
+    <div class="brand-meta"><p>Advocates &amp; Solicitors</p><p>Kuantan, Pahang</p></div>
+    <div class="brand-divider"></div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Practice Areas</div>
+    <button class="nav-item active" id="nav0" onclick="goPage('property',0)">
+      <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 12l9-9 9 9M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9"/></svg>
+      Buy &amp; Sale of Property
+    </button>
+    <button class="nav-item" id="nav1" onclick="goPage('will',1)">
+      <svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 12h6m-3-3v6M7 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2h-2M9 3h6v4H9V3z"/></svg>
+      Will &amp; Estate
+    </button>
+    <button class="nav-item" id="nav2" onclick="goPage('employment',2)">
+      <svg class="nav-icon" viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2zM16 3H8a2 2 0 00-2 2v2h12V5a2 2 0 00-2-2z"/></svg>
+      Employment Law
+    </button>
+    <button class="nav-item" id="nav3" onclick="goPage('others',3)">
+      <svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+      Others
+    </button>
+    <div class="nav-section-label" style="margin-top:20px;">Firm</div>
+    <button class="nav-item" id="nav4" onclick="goPage('home',4)">
+      <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      Home
+    </button>
+  </nav>
+  <div class="sidebar-footer"><p>Wong, Law &amp; Ti<br/>Advocates &amp; Solicitors<br/>Kuantan, Pahang, Malaysia</p></div>
+</aside>
+
+<!-- ══════════════════════════════
+     HOME PAGE
+══════════════════════════════ -->
+<div id="page-home" class="page active">
+  <div class="site-layout">
+    <div class="main-area">
+      <header class="topbar">
+        <div class="topbar-left"><div class="topbar-dot"></div><div class="topbar-name">Kevin Goh</div></div>
+        <span class="topbar-loc">Kuantan, Pahang</span>
+      </header>
+
+      <section class="hero">
+        <div class="hero-bg-text">Law</div>
+        <div class="hero-inner">
+          <div class="hero-tag">Advocate &amp; Solicitor · High Court of Malaya</div>
+          <div class="hero-name"><strong>Kevin</strong> Goh</div>
+          <div class="hero-firm">Wong, Law &amp; Ti — Kuantan</div>
+          <div class="hero-rule"></div>
+          <div class="hero-desc">An information resource on legal topics in Malaysia. Browse the categories on the left to read articles on property, estate, employment and more.</div>
+          <div class="hero-chips">
+            <span class="chip">Conveyancing</span>
+            <span class="chip">Will &amp; Probate</span>
+            <span class="chip">Employment</span>
+            <span class="chip">General Practice</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="stats-band">
+        <div class="stat-item"><div class="stat-num">15+</div><div class="stat-label">Years Experience</div></div>
+        <div class="stat-item"><div class="stat-num">4</div><div class="stat-label">Practice Areas</div></div>
+        <div class="stat-item"><div class="stat-num">500+</div><div class="stat-label">Cases Handled</div></div>
+        <div class="stat-item"><div class="stat-num">100%</div><div class="stat-label">Client Focused</div></div>
+      </div>
+
+      <div class="two-col">
+        <!-- LEFT: area cards -->
+        <div class="col-left">
+          <div class="section-eyebrow">Browse Topics</div>
+          <div class="section-title">Select a Practice Area</div>
+          <div class="cards-list">
+            <div class="pcard" onclick="goPage('property',0)">
+              <div class="pcard-head">
+                <div class="pcard-icon"><svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9"/></svg></div>
+                <div class="pcard-title">Buy &amp; Sale of Property</div>
+              </div>
+              <div class="pcard-desc">Conveyancing, SPA drafting, title transfers and property due diligence articles.</div>
+              <div class="pcard-cta">Read articles →</div>
+            </div>
+            <div class="pcard" onclick="goPage('will',1)">
+              <div class="pcard-head">
+                <div class="pcard-icon"><svg viewBox="0 0 24 24"><path d="M9 12h6m-3-3v6M7 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2h-2M9 3h6v4H9V3z"/></svg></div>
+                <div class="pcard-title">Will &amp; Estate</div>
+              </div>
+              <div class="pcard-desc">Will drafting, estate administration, probate and letters of administration.</div>
+              <div class="pcard-cta">Read articles →</div>
+            </div>
+            <div class="pcard" onclick="goPage('employment',2)">
+              <div class="pcard-head">
+                <div class="pcard-icon"><svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2zM16 3H8a2 2 0 00-2 2v2h12V5a2 2 0 00-2-2z"/></svg></div>
+                <div class="pcard-title">Employment Law</div>
+              </div>
+              <div class="pcard-desc">Dismissal, employment contracts, Industrial Court and employee rights.</div>
+              <div class="pcard-cta">Read articles →</div>
+            </div>
+            <div class="pcard" onclick="goPage('others',3)">
+              <div class="pcard-head">
+                <div class="pcard-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div>
+                <div class="pcard-title">Others</div>
+              </div>
+              <div class="pcard-desc">Civil litigation, debt recovery, company matters and general legal topics.</div>
+              <div class="pcard-cta">Read articles →</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Map -->
+        <div class="col-right">
+          <div class="map-header">
+            <div class="section-eyebrow">Find the Firm</div>
+            <h3>Wong, Law &amp; Ti — Kuantan</h3>
+          </div>
+          <div class="map-frame">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127481.7!2d103.283!3d3.8077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31c9c450c9048bdd%3A0xbdc0c23278c5f0a7!2sKuantan%2C%20Pahang!5e0!3m2!1sen!2smy!4v1700000000000"
+              allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+              title="Wong, Law and Ti Kuantan">
+            </iframe>
+          </div>
+          <div class="map-address">
+            <p><strong>Wong, Law &amp; Ti</strong>Advocates &amp; Solicitors<br/>Kuantan, Pahang, Malaysia</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-strip">
+        <div class="about-left">
+          <div class="about-quote">"Committed to delivering <em>clear, honest</em> legal information so you can make decisions with confidence."</div>
+          <div class="about-attr">— Kevin Goh, Advocate &amp; Solicitor</div>
+        </div>
+        <div class="about-right">
+          <div class="section-eyebrow">About the Firm</div>
+          <div class="about-items">
+            <div class="about-item"><div class="about-item-dot"></div><div class="about-item-text"><p>Established Practice</p><p>Wong, Law &amp; Ti is a trusted law firm based in Kuantan, serving clients across Pahang.</p></div></div>
+            <div class="about-item"><div class="about-item-dot"></div><div class="about-item-text"><p>Client-Centred Approach</p><p>Practical, straightforward advice tailored to each client's individual needs.</p></div></div>
+            <div class="about-item"><div class="about-item-dot"></div><div class="about-item-text"><p>Based in Kuantan</p><p>Conveniently located in Kuantan, Pahang with flexible appointment scheduling.</p></div></div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="site-footer">
+        <div>
+          <div class="footer-firm">Wong, <span>Law</span> &amp; Ti</div>
+          <div class="footer-address">Kuantan, Pahang, Malaysia · Advocates &amp; Solicitors · High Court of Malaya</div>
+        </div>
+      </footer>
+      <div class="footer-bar">
+        <p>&copy; 2025 Wong, Law &amp; Ti. All rights reserved.</p>
+        <p>Kevin Goh — Advocate &amp; Solicitor</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     PROPERTY PAGE
+══════════════════════════════ -->
+<div id="page-property" class="page">
+  <div class="site-layout">
+    <div class="main-area">
+      <header class="art-topbar">
+        <button class="back-btn" onclick="goPage('home',4)"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg> Back to Home</button>
+        <div class="art-sep"></div><span class="art-topbar-name">Kevin Goh</span>
+      </header>
+      <div class="art-hero">
+        <div class="art-category">Practice Area</div>
+        <h1>Buy &amp; Sale of Property</h1>
+        <div class="art-hero-sub">Conveyancing, SPA, title transfers &amp; property law in Malaysia</div>
+      </div>
+      <div class="art-body">
+        <div class="art-main">
+          <div class="art-cards">
+            <div class="art-card"><div class="art-card-tag">Conveyancing</div><h3>Understanding the Sale &amp; Purchase Agreement (SPA) in Malaysia</h3><p>A guide to what the SPA covers, key clauses to look out for, and your rights as a buyer or seller under Malaysian property law.</p><div class="art-card-foot"><span class="art-card-date">Coming Soon</span><span class="art-card-arr">→</span></div></div>
+            <div class="art-card"><div class="art-card-tag">Title Transfer</div><h3>How Property Title Transfers Work in Malaysia</h3><p>Step-by-step overview of the title transfer process, including Memorandum of Transfer (MOT) and stamp duty considerations.</p><div class="art-card-foot"><span class="art-card-date">Coming Soon</span><span class="art-card-arr">→</span></div></div>
+            <div class="art-card"><div class="art-card-tag">Due Diligence</div><h3>Property Due Diligence: What to Check Before You Buy</h3><p>Encumbrances, caveats, land status, developer background — what every buyer should verify before signing anything.</p><div class="art-card-foot"><span class="art-card-date">Coming Soon</span><span class="art-card-arr">→</span></div></div>
+            <div class="art-card"><div class="art-card-tag">Loan &amp; Financing</div><h3>Housing Loan Documentation &amp; Legal Fees Explained</h3><p>What legal documents are involved in a housing loan and how legal fees are calculated under the Solicitors' Remuneration Order.</p><div class="art-card-foot"><span class="art-card-date">Coming Soon</span><span class="art-card-arr">→</span></div></div>
+          </div>
+        </div>
+        <div class="art-side">
+          <div class="art-side-label">About This Section</div>
+          <div class="art-side-card"><h4>Buy &amp; Sale of Property</h4><p>Articles covering the full lifecycle of property transactions in Malaysia — from offer to vacant possession.</p></div>
+          <div class="art-side-div"></div>
+          <div class="art-side-label">The Firm</div>
+          <div class="art-side-contact"><strong>Wong, Law &amp; Ti</strong>Kuantan, Pahang<br/>Advocates &amp; Solicitors</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     WILL PAGE
+══════════════════════════════ -->
+<div id="page-will" class="page">
+  <div class="site-layout">
+    <div class="main-area">
+      <header class="art-topbar">
+        <button class="back-btn" onclick="goPage('home',4)"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg> Back to Home</button>
+        <div class="art-sep"></div><span class="art-topbar-name">Kevin Goh</span>
+      </header>
+      <div class="art-hero">
+        <div class="art-category">Practice Area</div>
+        <h1>Will &amp; Estate</h1>
+        <div class="art-hero-sub">Wills, probate, estate administration &amp; inheritance law in Malaysia</div>
+      </div>
+      <div class="art-body">
+        <div class="art-main">
+          <div class="art-cards">
+            <div class="art-card"><div class="art-card-tag">Will Drafting</div><h3>Why Every Malaysian Adult Should Have a Will</h3><p>What happens to your assets if you die without a will (intestate)? A plain-language explanation of the risks and the importance of estate planning.</p><div class="art-card-foot"><span class="art-card-date">Coming Soon</span><span class="art-card-arr">→</span></div></div>
+            <div class="art-card"><div class="art-card-tag">Probate</div><h3>Grant of Probate vs Letters of Administration — What's the Difference?</h3><p>Understanding when each applies, how to apply, and typical timelines for estate administration in Malaysia.</p><div class="art-card-foot"><span class="art-card-date">Coming Soon</span><span class="art-card-arr">→</span></div></div>
+            <div class="art-card"><div class="art-card-tag">Distribution</div><h3>How Assets Are Distributed Under the Distribution Act 1958</h3><p>The statutory rules for distributing an estate when there is no valid will — and who gets what under Malaysian law.</p><div class="art-card-foot"><span class="art-card-date">Coming Soon</span><span class="art-card-arr">→</span></div></div>
+            <div class="art-card"><div class="art-card-tag">Estate Planning</div><h3>Nomination of Beneficiaries for Insurance &amp; EPF — Is That Enough?</h3><p>Many Malaysians rely solely on EPF and insurance nominations. Here's what a proper estate plan should also include.</p><div class="art-card-foot"><span class="art-card-date">Coming Soon</span><span class="art-card-arr">→</span></div></div>
+          </div>
+        </div>
+        <div class="art-side">
+          <div class="art-side-label">About This Section</div>
+          <div class="art-side-card"><h4>Will &amp; Estate</h4><p>Practical guides on protecting your assets and ensuring your wishes are carried out.</p></div>
+          <div class="art-side-div"></div>
+          <div class="art-side-label">The Firm</div>
+          <div class="art-side-contact"><strong>Wong, Law &amp; Ti</strong>Kuantan, Pahang<br/>Advocates &amp; Solicitors</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     EMPLOYMENT PAGE
+══════════════════════════════ -->
+<div id="page-employment" class="page">
+  <div class="site-layout">
+    <div class="main-area">
+      <header class="art-topbar">
+        <button class="back-btn" onclick="goPage('home',4)"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg> Back to Home</button>
+        <div class="art-sep"></div><span class="art-topbar-name">Kevin Goh</span>
+      </header>
+      <div class="art-hero">
+        <div class="art-category">Practice Area</div>
+        <h1>Employment Law</h1>
+        <div class="art-hero-sub">Workplace rights, dismissal, contracts &amp; Industrial Court in Malaysia</div>
+      </div>
+      <div class="art-body">
+        <div class="art-main">
+          <div class="art-cards">
+            <div class="art-card"><div class="art-card-tag">Dismissal</div><h3>Wrongful Dismissal in Malaysia: Your Rights Under the Employment Act</h3><p>What counts as wrongful or constructive dismissal, time limits for filing a complaint, and how the Industrial Court handles such claims.</p><div class="art-card-foot"><span class="art-card-date">Coming Soon</span><span class="art-card-arr">→</span></div></div>
+            <div class="art-card"><div class="art-card-tag">Contracts</div><h3>Key Clauses to Review in Your Employment Contract</h3><p>Restraint of trade, garden leave, termination notice, and other critical terms every employee should understand before signing.</p><div class="art-card-foot"><span class="art-card-date">Coming Soon</span><span class="art-card-arr">→</span></div></div>
+            <div class="art-card"><div class="art-card-tag">Retrenchment</div><h3>Retrenchment Benefits &amp; Procedures in Malaysia</h3><p>What employers must follow when conducting retrenchments, and what employees are legally entitled to receive.</p><div class="art-card-foot"><span class="art-card-date">Coming Soon</span><span class="art-card-arr">→</span></div></div>
+            <div class="art-card"><div class="art-card-tag">Industrial Court</div><h3>How the Industrial Court Process Works in Malaysia</h3><p>Filing a claim, conciliation at JTKSM, and what to expect at an Industrial Court hearing — step by step.</p><div class="art-card-foot"><span class="art-card-date">Coming Soon</span><span class="art-card-arr">→</span></div></div>
+          </div>
+        </div>
+        <div class="art-side">
+          <div class="art-side-label">About This Section</div>
+          <div class="art-side-card"><h4>Employment Law</h4><p>Know your rights. Practical employment law articles for both employees and employers in Malaysia.</p></div>
+          <div class="art-side-div"></div>
+          <div class="art-side-label">The Firm</div>
+          <div class="art-side-contact"><strong>Wong, Law &amp; Ti</strong>Kuantan, Pahang<br/>Advocates &amp; Solicitors</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     OTHERS PAGE
+══════════════════════════════ -->
+<div id="page-others" class="page">
+  <div class="site-layout">
+    <div class="main-area">
+      <header class="art-topbar">
+        <button class="back-btn" onclick="goPage('home',4)"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg> Back to Home</button>
+        <div class="art-sep"></div><span class="art-topbar-name">Kevin Goh</span>
+      </header>
+      <div class="art-hero">
+        <div class="art-category">Practice Area</div>
+        <h1>Others</h1>
+        <div class="art-hero-sub">Civil litigation, company law, debt recovery &amp; general legal topics</div>
+      </div>
+      <div class="art-body">
+        <div class="art-main">
+          <div class="art-cards">
+            <div class="art-card"><div class="art-card-tag">Civil Litigation</div><h3>An Introduction to Civil Litigation in Malaysian Courts</h3><p>How civil disputes are resolved in Malaysia — from filing a writ to judgment — and what to expect at each stage.</p><div class="art-card-foot"><span class="art-card-date">Coming Soon</span><span class="art-card-arr">→</span></div></div>
+            <div class="art-card"><div class="art-card-tag">Debt Recovery</div><h3>Recovering a Debt in Malaysia: Legal Options Available</h3><p>Letter of demand, filing in Magistrate or Sessions Court, and enforcement of judgments — a practical overview for creditors.</p><div class="art-card-foot"><span class="art-card-date">Coming Soon</span><span class="art-card-arr">→</span></div></div>
+            <div class="art-card"><div class="art-card-tag">Company Law</div><h3>Setting Up a Sdn Bhd in Malaysia: Legal Basics</h3><p>What you need to know about incorporating a private limited company under the Companies Act 2016.</p><div class="art-card-foot"><span class="art-card-date">Coming Soon</span><span class="art-card-arr">→</span></div></div>
+            <div class="art-card"><div class="art-card-tag">General</div><h3>When Do You Actually Need a Lawyer in Malaysia?</h3><p>A practical guide to understanding when legal representation is necessary and what to look for when engaging a solicitor.</p><div class="art-card-foot"><span class="art-card-date">Coming Soon</span><span class="art-card-arr">→</span></div></div>
+          </div>
+        </div>
+        <div class="art-side">
+          <div class="art-side-label">About This Section</div>
+          <div class="art-side-card"><h4>Others</h4><p>General legal topics for Malaysians — civil, corporate, and everyday law explained clearly.</p></div>
+          <div class="art-side-div"></div>
+          <div class="art-side-label">The Firm</div>
+          <div class="art-side-contact"><strong>Wong, Law &amp; Ti</strong>Kuantan, Pahang<br/>Advocates &amp; Solicitors</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const hbg = document.getElementById('hbg');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+
+function closeSidebar(){
+  hbg.classList.remove('open');
+  sidebar.classList.remove('open');
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+function toggleSidebar(){
+  const open = sidebar.classList.toggle('open');
+  hbg.classList.toggle('open');
+  overlay.classList.toggle('open');
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+hbg.addEventListener('click', toggleSidebar);
+overlay.addEventListener('click', closeSidebar);
+window.addEventListener('resize', () => { if(window.innerWidth > 768) closeSidebar(); });
+
+function goPage(name, navIndex){
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const p = document.getElementById('page-' + name);
+  if(p){ p.classList.add('active'); window.scrollTo(0,0); }
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const ni = document.getElementById('nav' + navIndex);
+  if(ni) ni.classList.add('active');
+  if(window.innerWidth <= 768) closeSidebar();
+}
+</script>
+</body>
+</html>
